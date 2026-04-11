@@ -649,7 +649,7 @@ function renderResults() {
         <td>${orderCell}</td>
         <td><span class="tracking-num">${r.trackingNumber}</span></td>
         <td>${orderTypeBadge}</td>
-        <td><span class="badge badge-red">Returned</span></td>
+        <td>${getTagBadge(r.tag)}</td>
         <td>${stateBadge}</td>
         <td id="shopify-${i}">${shopifyCell}</td>
       </tr>
@@ -673,6 +673,13 @@ function getShopifyCell(status) {
   if (status === "success") return `<span class="badge badge-success">✓ تم التحديث</span>`;
   if (status === "error")   return `<span class="badge badge-danger">✗ فشل</span>`;
   return `<span class="badge badge-neutral">—</span>`;
+}
+
+function getTagBadge(tag) {
+  if (!tag) return `<span class="badge badge-neutral">—</span>`;
+  if (tag === "Returned") return `<span class="badge badge-red">Returned</span>`;
+  // tag يحتوي على السهمين ►►Returned◄◄
+  return `<span class="badge badge-warn" style="font-size:11px;">${tag}</span>`;
 }
 
 function onRowCheck(i, checked) {
@@ -731,6 +738,7 @@ async function startUpdate() {
     orderName:      r.businessRef,
     trackingNumber: r.trackingNumber,
     orderType:      r.orderType || "",
+    tag:            r.tag || "Returned",
   }));
 
   progressText.textContent = `0 / ${items.length}`;
